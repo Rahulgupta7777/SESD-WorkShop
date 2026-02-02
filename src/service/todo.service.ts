@@ -1,5 +1,11 @@
 import TodoModel, { ITodo } from '../models/todo.model';
 
+interface TodoServiceConfig {
+    createTodo: (data: { title: string; description: string }) => Promise<ITodo>;
+    getTodos: (options: FindAllOptions) => Promise<{ data: ITodo[]; total: number; page: number; limit: number }>;
+    updateTodo: (id: string, data: Partial<ITodo>) => Promise<ITodo | null>;
+    deleteTodo: (id: string) => Promise<ITodo | null>;
+}
 interface FindAllOptions {
     search?: string;
     filter?: {
@@ -13,7 +19,8 @@ interface FindAllOptions {
     limit?: number;
 }
 
-class TodoService {
+
+class TodoService implements TodoServiceConfig {
     async createTodo(data: { title: string; description: string }) {
         const newTodo = new TodoModel(data);
         return await newTodo.save();
@@ -22,7 +29,6 @@ class TodoService {
     async getTodos(options: FindAllOptions = {}) {
         const query: any = {};
 
-        // 1. Search
         if (options.search) {
             query.$or = [
                 { title: { $regex: options.search, $options: 'i' } },
@@ -30,20 +36,15 @@ class TodoService {
             ];
         }
 
-        // 2. Filter
         if (options.filter && options.filter.completed !== undefined) {
             query.completed = options.filter.completed;
         }
-
-        // 3. Sort
         let sortOption: any = {};
         if (options.sort) {
             sortOption[options.sort.field] = options.sort.order === 'asc' ? 1 : -1;
         } else {
-            sortOption = { createdAt: -1 }; // Default sort
+            sortOption = { createdAt: -1 }; 
         }
-
-        // 4. Pagination
         const page = options.page || 1;
         const limit = options.limit || 10;
         const skip = (page - 1) * limit;

@@ -1,7 +1,14 @@
 import { Request, Response } from 'express';
 import TodoService from '../service/todo.service';
 
-class TodoController {
+interface TodoControllerConfig {
+    createTodo: (req: Request, res: Response) => void;
+    getTodos: (req: Request, res: Response) => void;
+    updateTodo: (req: Request, res: Response) => void;
+    deleteTodo: (req: Request, res: Response) => void;
+}
+
+class TodoController implements TodoControllerConfig {
     createTodo = async (req: Request, res: Response) => {
         try {
             const todo = await TodoService.createTodo(req.body);
@@ -32,7 +39,7 @@ class TodoController {
 
     updateTodo = async (req: Request, res: Response) => {
         try {
-            const todo = await TodoService.updateTodo(req.params.id, req.body);
+            const todo = await TodoService.updateTodo(req.params.id as string, req.body);
             if (!todo) {
                 res.status(404).json({ message: 'Todo not found' });
                 return;
@@ -45,7 +52,7 @@ class TodoController {
 
     deleteTodo = async (req: Request, res: Response) => {
         try {
-            const result = await TodoService.deleteTodo(req.params.id);
+            const result = await TodoService.deleteTodo(req.params.id as string);
             if (!result) {
                 res.status(404).json({ message: 'Todo not found' });
                 return;
