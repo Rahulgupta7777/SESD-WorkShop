@@ -1,6 +1,6 @@
 # SESD Workshop — Book Management API (TypeScript + Express + Mongoose)
 
-A RESTful Book Management service built with TypeScript, Express (v5), and Mongoose (v9). It supports create/read/update/delete (CRUD), text search, sorting, and pagination.
+A Book Management service built with TypeScript, Express and Mongoose. It supports create/read/update/delete (CRUD), text search, sorting, and pagination.
 
 ## Features
 - CRUD for books
@@ -33,6 +33,8 @@ src/
 
 ## Prerequisites
 - Node.js 18+
+- typescript ts-node
+- dotenv
 - MongoDB running locally or a connection string
 - `.env` file for configuration
 
@@ -57,7 +59,7 @@ src/
 4. **Start Server**
    ```bash
    npm start
-   # Or for development with auto-reload:
+   or 
    npm run dev
    ```
 
@@ -127,29 +129,3 @@ Base URL: `http://localhost:8080/api`
   - `204 No Content` → deleted
   - `404 Not Found` → id missing
   - `500` → error
-
-## Curl Examples
-```bash
-# Create
-curl -sS -X POST http://localhost:8080/api/books \
-  -H 'Content-Type: application/json' \
-  -d '{"title":"The Great Gatsby","author":"Fitzgerald","publishedDate":"1925","isbn":"97807","pages":180}'
-
-# List (default pagination)
-curl -sS "http://localhost:8080/api/books"
-
-# List: search + sort + pagination
-curl -sS "http://localhost:8080/api/books?search=gatsby&sortBy=createdAt&order=desc&page=1&limit=5"
-
-# Update
-ID="<replace-with-id>"
-curl -sS -X PUT "http://localhost:8080/api/books/$ID" \
-  -H 'Content-Type: application/json' \
-  -d '{"pages":200}'
-
-# Delete
-curl -sS -X DELETE "http://localhost:8080/api/books/$ID" -i
-```
-
-## License
-ISC
