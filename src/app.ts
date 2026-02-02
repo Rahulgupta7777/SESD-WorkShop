@@ -31,6 +31,9 @@ class App implements AppConfig {
 
     initializeRoutes(): void {
         const bookRoute = new BookRoute();
+        this.app.get('/', (req, res) => {
+            res.send('APP is running. Access books at /api/books');
+        });
         this.app.use('/api', bookRoute.router);
     }
 
