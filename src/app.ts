@@ -9,7 +9,7 @@ interface AppConfig {
     initializeRoutes(): void
 }
 
-class App {
+class App implements AppConfig {
     app: express.Application
     port: number | string = 8080;
 
