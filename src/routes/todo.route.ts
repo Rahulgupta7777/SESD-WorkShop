@@ -11,7 +11,7 @@ class TodoRoute {
     this.intializeRoutes();
   }
 
-  public intializeRoutes() {
+  private intializeRoutes() {
     this.router.post("/todos", this.todoController.createTodo);
     this.router.get("/todos", this.todoController.getTodos);
     this.router.put("/todos/:id", this.todoController.updateTodo);

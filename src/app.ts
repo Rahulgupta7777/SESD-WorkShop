@@ -2,7 +2,13 @@ import express from 'express'
 import TodoRoute from './routes/todo.route'
 import mongoose from 'mongoose'
 
-const todoRoute = new TodoRoute()
+interface AppConfig {
+    port?: number | string
+    startserver(): void
+    connecttoDB(): void
+    initializeRoutes(): void
+}
+
 class App {
     app: express.Application
     port: number | string = 8080;
@@ -16,15 +22,16 @@ class App {
 
     }
 
-    startserver() {
+    startserver() : void{
         this.app.listen(this.port, () => {
             console.log(`app is running on http://localhost:${this.port}`)
         })
     }
-    initializeRoutes() {
-        this.app.use('/', todoRoute.intializeRoutes)
+    initializeRoutes() : void{
+        const todoRoute = new TodoRoute()
+        this.app.use('/api', todoRoute.router)
     }
-    connecttoDB() { 
+    connecttoDB():void { 
         mongoose
             .connect("mongodb://localhost:27017/todos")
             .then(() => {
