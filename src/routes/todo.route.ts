@@ -8,10 +8,10 @@ class TodoRoute {
   constructor() {
     this.router = Router();
     this.todoController = new TodoController();
-    this.intializeRoutes();
+    this.initializeRoutes();
   }
 
-  private intializeRoutes() {
+  private initializeRoutes() {
     this.router.post("/todos", this.todoController.createTodo);
     this.router.get("/todos", this.todoController.getTodos);
     this.router.put("/todos/:id", this.todoController.updateTodo);

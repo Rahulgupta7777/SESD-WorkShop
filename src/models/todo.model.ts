@@ -1,7 +1,7 @@
-interface ITodo {
-    title: string;
-    description: string;
-    completed: boolean;
-}
+import mongoose from 'mongoose';
+import { ITodo, TodoSchema } from '../schema/todo.schema';
 
-export default ITodo;
+const TodoModel = mongoose.model<ITodo>('Todo', TodoSchema);
+
+export { ITodo };
+export default TodoModel;
