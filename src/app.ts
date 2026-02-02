@@ -1,45 +1,50 @@
-import express from 'express'
-import TodoRoute from './routes/todo.route'
-import mongoose from 'mongoose'
+import express from 'express';
+import BookRoute from './routes/book.route';
+import mongoose from 'mongoose';
+import 'dotenv/config';
 
 interface AppConfig {
-    port?: number | string
-    startserver(): void
-    connecttoDB(): void
-    initializeRoutes(): void
+    port?: number | string;
+    startserver(): void;
+    connecttoDB(): void;
+    initializeRoutes(): void;
 }
 
 class App implements AppConfig {
-    app: express.Application
-    port: number | string = 8080;
+    public app: express.Application;
+    public port: number | string;
 
     constructor() {
-        this.app = express()
+        this.app = express();
+        this.port = process.env.PORT || 8080;
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: true }));
-        this.initializeRoutes()
-        this.connecttoDB()
-
+        this.initializeRoutes();
+        this.connecttoDB();
     }
 
-    startserver() : void{
+    startserver(): void {
         this.app.listen(this.port, () => {
-            console.log(`app is running on http://localhost:${this.port}`)
-        })
+            console.log(`App is running on http://localhost:${this.port}`);
+        });
     }
-    initializeRoutes() : void{
-        const todoRoute = new TodoRoute()
-        this.app.use('/api', todoRoute.router)
+
+    initializeRoutes(): void {
+        const bookRoute = new BookRoute();
+        this.app.use('/api', bookRoute.router);
     }
-    connecttoDB():void { 
+
+    connecttoDB(): void {
+        const mongoURI = process.env.MONGO_URI || "mongodb://localhost:27017/books";
         mongoose
-            .connect("mongodb://localhost:27017/todos")
+            .connect(mongoURI)
             .then(() => {
-                console.log("Connected to MongoDB");
+                console.log("Connected to MongoDB at", mongoURI);
             })
             .catch((error) => {
                 console.error("Error connecting to MongoDB:", error);
             });
-        }
+    }
 }
-export default App
+
+export default App;
