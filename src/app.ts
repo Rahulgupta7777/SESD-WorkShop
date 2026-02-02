@@ -1,6 +1,6 @@
 import express from 'express';
 import BookRoute from './routes/book.route';
-import mongoose from 'mongoose';
+import connectDB from './config/db';
 import 'dotenv/config';
 
 interface AppConfig {
@@ -35,15 +35,7 @@ class App implements AppConfig {
     }
 
     connecttoDB(): void {
-        const mongoURI = process.env.MONGO_URI || "mongodb://localhost:27017/books";
-        mongoose
-            .connect(mongoURI)
-            .then(() => {
-                console.log("Connected to MongoDB at", mongoURI);
-            })
-            .catch((error) => {
-                console.error("Error connecting to MongoDB:", error);
-            });
+        connectDB();
     }
 }
 
