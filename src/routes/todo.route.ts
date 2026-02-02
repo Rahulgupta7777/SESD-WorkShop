@@ -1,35 +1,22 @@
 import express, { Router } from "express";
-import mongoose from "mongoose";
-// What you need to build:
-// Create a full-fledged CRUD App backend (Other than Todo) implementing OOPs with complete operations:
-// CreateGet (single + list)UpdateDeleteExtra features (add as many as possible)
-// Search, filter, sorting, paginationValidation + clean error handlingBonus: authenticationClean OOP structure: controllers → services → repositories, proper classes/models
+import TodoController from "../controllers/todo.controller";
 
 class TodoRoute {
-  path: string = "/todos";
-  router: Router = express.Router();
-  intializeRoutes() {
-    this.router.get(`${this.path}`, (req, res) => {
-      res.send("hello world");
-    });
-  }
-  getroute() {
-    this.router.get(`${this.path}`, (req, res) => {
-      res.send("get all todos");
-    });
+  public router: Router;
+  private todoController: TodoController;
+
+  constructor() {
+    this.router = Router();
+    this.todoController = new TodoController();
+    this.intializeRoutes();
   }
 
-  updateroute() {
-    this.router.put(`${this.path}/:id`, (req, res) => {
-      res.send("update todo");
-    });
+  public intializeRoutes() {
+    this.router.post("/todos", this.todoController.createTodo);
+    this.router.get("/todos", this.todoController.getTodos);
+    this.router.put("/todos/:id", this.todoController.updateTodo);
+    this.router.delete("/todos/:id", this.todoController.deleteTodo);
   }
-  deleteroute() {
-    this.router.delete(`${this.path}/:id`, (req, res) => {
-      res.send("delete todo");
-    });
-  }
-  
 }
 
 export default TodoRoute;
